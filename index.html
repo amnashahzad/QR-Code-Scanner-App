@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator/Scanner App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>QR Code Generator/Scanner App</h1>
+        <div class="generator">
+            <input type="text" id="qr-text" placeholder="Enter text" >
+            <button id="generate-btn">Generate QR Code</button>
+            <div id="qrcode"></div>
+        </div>
+        <div class="scanner">
+            <video id="qr-video" autoplay></video>
+            <button id="scan-btn">Scan QR Code</button>
+            <div id="qr-result"></div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qr-scanner"></script>
+</body>
+
+</html>
