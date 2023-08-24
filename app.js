@@ -1,74 +1,61 @@
-// QR Code Generation
-const generateBtn = document.getElementById('generate-btn');
-const qrText = document.getElementById('qr-text');
-const qrcode = new QRCode(document.getElementById('qrcode'), {});
+const generateBtn = document.getElementById("generate-btn");
+const qrText = document.getElementById("qr-text");
+const qrCodeDiv = document.getElementById("qr-code");
 
-generateBtn.addEventListener('click', () => {
-    if (qrText.value) {
-        qrcode.makeCode(qrText.value);
-    }
-});
+generateBtn.addEventListener("click", generateQRCode);
 
-// QR Code Scanning
-const scanBtn = document.getElementById('scan-btn');
-const qrVideo = document.getElementById('qr-video');
-const qrResult = document.getElementById('qr-result');
-
-scanBtn.addEventListener('click', () => {
-    qrResult.innerHTML = 'Scanning...';
-    qrVideo.style.display = 'block';
-
-    const constraints = { video: { facingMode: 'environment' } };
-
-    navigator.mediaDevices.getUserMedia(constraints)
-        .then(stream => {
-            qrVideo.srcObject = stream;
-            const qrCodeScanner = new QrScanner(qrVideo, result => {
-                qrResult.innerHTML = `Scanned QR Code: ${result}`;
-                qrCodeScanner.stop();
-                qrVideo.style.display = 'none';
-            });
-            qrCodeScanner.start();
-        })
-        .catch(error => {
-            qrResult.innerHTML = 'Error accessing camera.';
-            console.error('Error accessing camera:', error);
+function generateQRCode() {
+    const text = qrText.value;
+    if (text.trim() !== "") {
+        qrCodeDiv.innerHTML = ""; // Clear previous QR code
+        const qrCode = new QRCode(qrCodeDiv, {
+            text: text,
+            width: 128,
+            height: 128,
         });
-});
-// QR Code Generation
-const generateBtn = document.getElementById('generate-btn');
-const qrText = document.getElementById('qr-text');
-const qrcode = new QRCode(document.getElementById('qrcode'), {});
-
-generateBtn.addEventListener('click', () => {
-    if (qrText.value) {
-        qrcode.makeCode(qrText.value);
     }
-});
+}
 
-// QR Code Scanning
-const scanBtn = document.getElementById('scan-btn');
-const qrVideo = document.getElementById('qr-video');
-const qrResult = document.getElementById('qr-result');
+// QR Code Scanner
+const scannerSection = document.getElementById("scanner");
+const qrVideo = document.getElementById("qr-video");
+const qrCanvas = document.getElementById("qr-canvas");
+const qrCanvasContext = qrCanvas.getContext("2d");
 
-scanBtn.addEventListener('click', () => {
-    qrResult.innerHTML = 'Scanning...';
-    qrVideo.style.display = 'block';
+function startScanner() {
+    scannerSection.style.display = "block";
 
-    const constraints = { video: { facingMode: 'environment' } };
-
-    navigator.mediaDevices.getUserMedia(constraints)
-        .then(stream => {
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function (stream) {
             qrVideo.srcObject = stream;
-            const qrCodeScanner = new QrScanner(qrVideo, result => {
-                qrResult.innerHTML = `Scanned QR Code: ${result}`;
-                qrCodeScanner.stop();
-                qrVideo.style.display = 'none';
-            });
-            qrCodeScanner.start();
+            qrVideo.play();
+            requestAnimationFrame(scan);
         })
-        .catch(error => {
-            qrResult.innerHTML = 'Error accessing camera.';
-            console.error('Error accessing camera:', error);
+        .catch(function (error) {
+            console.error("Error accessing camera:", error);
         });
-});
+}
+
+function scan() {
+    if (qrVideo.readyState === qrVideo.HAVE_ENOUGH_DATA) {
+        qrCanvas.width = qrVideo.videoWidth;
+        qrCanvas.height = qrVideo.videoHeight;
+        qrCanvasContext.drawImage(qrVideo, 0, 0, qrCanvas.width, qrCanvas.height);
+
+        const imageData = qrCanvasContext.getImageData(0, 0, qrCanvas.width, qrCanvas.height);
+        const code = jsQR(imageData.data, imageData.width, imageData.height, {
+            inversionAttempts: "dontInvert",
+        });
+
+        if (code) {
+            alert("QR Code Scanned: " + code.data);
+        }
+
+        requestAnimationFrame(scan);
+    } else {
+        requestAnimationFrame(scan);
+    }
+}
+
+// Initialize the scanner
+startScanner();
