@@ -1,30 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Generator/Scanner App</title>
+    <title>QR Code App</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+    <h1>QR Code Generator/Scanner App</h1>
     <div class="container">
-        <h1>QR Code Generator/Scanner App</h1>
-        <div class="generator">
-            <input type="text" id="qr-text" placeholder="Enter text" >
-            <button id="generate-btn">Generate QR Code</button>
-            <div id="qrcode"></div>
+        <div id="generator" style="margin-left: 10%;">
+            <h2 style="font-size: 250%; width: 190%;">QR Code Generator</h2>
+            <h2 style="margin-left: 35px; width: 100%; font-size: 200%;">QR Code Scanner</h2>
+            <input type="text" id="qr-text" placeholder="Enter text or URL">
+            <button id="generate-btn" style="margin-left: 15px;">Generate QR Code</button>
+            <div id="qr-code"></div>
         </div>
-        <div class="scanner">
-            <video id="qr-video" autoplay></video>
-            <button id="scan-btn">Scan QR Code</button>
-            <div id="qr-result"></div>
+        <div id="scanner">
+            <!-- <h2 style="margin-right: 60%;margin-top: 20%; width: 70%;">QR Code Scanner</h2> -->
+            <video id="qr-video" autoplay playsinline></video>
+            <canvas id="qr-canvas"></canvas>
         </div>
     </div>
     <script src="app.js"></script>
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qr-scanner"></script>
-</body>
+<script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
 
+</body>
 </html>
